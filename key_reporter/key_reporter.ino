@@ -1,25 +1,25 @@
-int count=0;
+int last_sw=HIGH,sw=HIGH;
+boolean OpenLab=false;
 void setup(){
   pinMode(2,INPUT);
   Serial.begin(9600);
 }
 
 void loop(){
-  int sw=digitalRead(2);
+  sw=digitalRead(2);
 
-
-  if(sw==HIGH){
-    count=0;
+  if(sw==HIGH&&last_sw==LOW){
+    OpenLab=true;
   }
-
   else{
-    count++;
+    OpenLab=false;
   }
-
-  if(count==1){
+  if(OpenLab){
     Serial.write(1);
   }
+  last_sw=sw;
 }
+
 
 
 
