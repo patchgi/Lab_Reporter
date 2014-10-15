@@ -18,7 +18,9 @@ Twitter myTwitter;
 
 Serial input;
 
-void setup(){
+int savetime;
+
+void setup() {
   input=new Serial(this, Serial.list()[0], 9600);
 
   ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -27,23 +29,42 @@ void setup(){
   cb.setOAuthAccessToken(accessToken);
   cb.setOAuthAccessTokenSecret(accessSecret);
   myTwitter = new TwitterFactory(cb.build()).getInstance();
-
 }
 
-void draw(){
+void draw() {
 }
-void serialEvent(Serial port)
-{
+void serialEvent(Serial port){
 
   int inputdata=port.read();
-  
-    try {
-      Status st = myTwitter.updateStatus("open Lab "+hour()+":"+minute()+":"+second());
-      println("Successfully updated the status to [" + st.getText() + "].");
-      
+
+  try {
+    if (savetime!=day()) {
+      if (hour()>9) {
+        Status st = myTwitter.updateStatus("open Lab "+hour()+judgeUpper(minute())+minute()+judgeUpper(second())+second());
+        println("Successfully updated the status to [" + st.getText() + "].");
+        savetime=day();
+      }
+      else {
+        Status st = myTwitter.updateStatus("open Lab 0"+hour()+judgeUpper(minute())+minute()+judgeUpper(second())+second());
+        println("Successfully updated the status to [" + st.getText() + "].");
+        savetime=day();
+      }
     }
-    catch (TwitterException e) {
-      println("Error status code: " + e.getStatusCode());
-    }
-  
+  }
+
+  catch (TwitterException e) {
+    println("Error status code: " + e.getStatusCode());
+  }
 }
+
+
+String judgeUpper(int time) {
+  if (time>9) {
+    return ":";
+  }
+
+  else {
+    return ":0";
+  }
+}
+
