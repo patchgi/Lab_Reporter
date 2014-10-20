@@ -1,5 +1,6 @@
 int last_sw=HIGH,sw=HIGH;
 boolean OpenLab=false;
+
 void setup(){
   pinMode(2,INPUT);
   Serial.begin(9600);
